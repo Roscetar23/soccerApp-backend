@@ -163,7 +163,55 @@ fetch("http://localhost:3000/equipos?liga=española")
 
 ---
 
-## 9. Otros Endpoints (Equipos)
+## 9. Actualizar o Crear Estadísticas de un Equipo (`POST`)
+Permite guardar o actualizar las estadísticas de un equipo específico usando su ID.
+
+**URL:** `POST http://localhost:3000/equipos/:id/estadisticas`
+**Body JSON:**
+```json
+{
+  "ultimosPartidos": ["G", "P", "E", "G", "G"],
+  "porcentajeVictorias": 65.5,
+  "promedioPases": 450,
+  "promedioTirosAlArco": 5,
+  "promedioFaltas": 12
+}
+```
+
+**Ejemplo en Frontend (`fetch`):**
+```javascript
+fetch("http://localhost:3000/equipos/69b45ac0248123741db6b2ac/estadisticas", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    ultimosPartidos: ["G", "P", "E", "G", "G"],
+    porcentajeVictorias: 65.5,
+    promedioPases: 450,
+    promedioTirosAlArco: 5,
+    promedioFaltas: 12
+  })
+})
+```
+
+---
+
+## 10. Obtener Estadísticas de un Equipo (`GET`)
+Si quieres consultar **únicamente** las estadísticas de un equipo en particular sin cargar el resto de la información del equipo, puedes usar este endpoint. *(Nota: De todos modos al hacer un `GET /equipos` o `GET /equipos/:id` general, las estadísticas ya te llegarán incluidas en la respuesta)*.
+
+**URL:** `GET http://localhost:3000/equipos/:id/estadisticas`
+
+**Ejemplo en Frontend (`fetch`):**
+```javascript
+fetch("http://localhost:3000/equipos/69b45ac0248123741db6b2ac/estadisticas")
+  .then(res => res.json())
+  .then(data => {
+    console.log("Estadísticas del equipo:", data);
+  });
+```
+
+---
+
+## 11. Otros Endpoints (Equipos)
 También dispones de los siguientes endpoints (similares a los de partidos):
 - **Obtener por ID:** `GET /equipos/:id`
 - **Actualizar:** `PATCH /equipos/:id`
@@ -177,7 +225,7 @@ Esta sección detalla los endpoints disponibles para guardar y obtener la selecc
 
 ---
 
-## 10. Guardar la Selección de Favoritos (`POST`)
+## 12. Guardar la Selección de Favoritos (`POST`)
 Guarda la selección de la liga y el equipo favorito vinculado al ID de un usuario registrado.
 
 **URL:** `POST http://localhost:3000/favoritos`
@@ -206,7 +254,7 @@ fetch("http://localhost:3000/favoritos", {
 
 ---
 
-## 11. Obtener Favoritos por Usuario (`GET`)
+## 13. Obtener Favoritos por Usuario (`GET`)
 Devuelve todas las selecciones de favoritos asociadas a un `userId` específico.
 
 **URL:** `GET http://localhost:3000/favoritos/usuario/:userId`
@@ -233,7 +281,7 @@ Esta sección detalla los endpoints para el registro y login de usuarios.
 
 ---
 
-## 12. Registrar un Usuario (`POST`)
+## 14. Registrar un Usuario (`POST`)
 Crea un nuevo usuario en la base de datos de MongoDB, encriptando su contraseña.
 
 **URL:** `POST http://localhost:3000/auth/register`
@@ -259,7 +307,7 @@ fetch("http://localhost:3000/auth/register", {
 
 ---
 
-## 13. Iniciar Sesión / Login (`POST`)
+## 15. Iniciar Sesión / Login (`POST`)
 Inicia sesión validando el usuario y la contraseña. Si son correctos, devuelve el `id` del usuario.
 
 **URL:** `POST http://localhost:3000/auth/login`
@@ -296,7 +344,7 @@ fetch("http://localhost:3000/auth/login", {
 
 ---
 
-## 14. Cerrar Sesión / Logout (`POST`)
+## 16. Cerrar Sesión / Logout (`POST`)
 Este endpoint sirve para cerrar la sesión actual en el backend. 
 **Nota importante**: En este modelo de autenticación simple, la verdadera forma de "cerrar sesión" ocurre en el **frontend**, borrando el `id` (por ejemplo usando `localStorage.removeItem('userId')`). Puedes llamar a este endpoint para tener consistencia en tu código.
 

@@ -1,6 +1,24 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
+@Schema({ _id: false })
+export class EstadisticasEquipo {
+  @Prop({ type: [String], default: [] })
+  ultimosPartidos: string[];
+
+  @Prop({ default: 0 })
+  porcentajeVictorias: number;
+
+  @Prop({ default: 0 })
+  promedioPases: number;
+
+  @Prop({ default: 0 })
+  promedioTirosAlArco: number;
+
+  @Prop({ default: 0 })
+  promedioFaltas: number;
+}
+
 export type EquipoDocument = Equipo & Document;
 
 @Schema({ timestamps: true })
@@ -16,6 +34,9 @@ export class Equipo {
 
   @Prop({ required: true })
   liga: string;
+
+  @Prop({ type: EstadisticasEquipo, default: () => ({}) })
+  estadisticas: EstadisticasEquipo;
 }
 
 export const EquipoSchema = SchemaFactory.createForClass(Equipo);

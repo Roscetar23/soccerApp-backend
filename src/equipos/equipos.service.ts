@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateEquipoDto } from './dto/create-equipo.dto';
 import { UpdateEquipoDto } from './dto/update-equipo.dto';
+import { CreateEstadisticasDto } from './dto/create-estadisticas.dto';
 import { Equipo, EquipoDocument } from './entities/equipo.entity';
 
 @Injectable()
@@ -46,4 +47,30 @@ export class EquiposService {
     }
     return deletedEquipo;
   }
-}
+
+  async updateEstadisticas(
+    id: string,
+    createEstadisticasDto: CreateEstadisticasDto,
+  ): Promise<Equipo> {
+    const updatedEquipo = await this.equipoModel
+      .findByIdAndUpdate(
+        id,
+        { estadisticas: createEstadisticasDto },
+        { new: true },
+      )
+      .exec();
+
+    if (!updatedEquipo) {
+      throw new NotFoundException(`Equipo con id ${id} no encontrado`);
+    }
+    return updatedEquipo;
+  }
+
+  async getEstadisticas(id: string): Promise<any> {
+    const equipo = await this.equipoModel.findById(id).select('estadisticas').exec();
+    if (!equipo) {
+      throw new NotFoundException(`Equipo con id ${id} no encontrado`);
+    }
+    return equipo.estadisticas;
+  }
+}    

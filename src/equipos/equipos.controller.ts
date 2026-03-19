@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestj
 import { EquiposService } from './equipos.service';
 import { CreateEquipoDto } from './dto/create-equipo.dto';
 import { UpdateEquipoDto } from './dto/update-equipo.dto';
+import { CreateEstadisticasDto } from './dto/create-estadisticas.dto';
 
 @Controller('equipos')
 export class EquiposController {
@@ -30,5 +31,18 @@ export class EquiposController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.equiposService.remove(id);
+  }
+
+  @Post(':id/estadisticas')
+  updateEstadisticas(
+    @Param('id') id: string,
+    @Body() createEstadisticasDto: CreateEstadisticasDto,
+  ) {
+    return this.equiposService.updateEstadisticas(id, createEstadisticasDto);
+  }
+
+  @Get(':id/estadisticas')
+  getEstadisticas(@Param('id') id: string) {
+    return this.equiposService.getEstadisticas(id);
   }
 }
