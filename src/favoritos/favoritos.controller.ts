@@ -17,6 +17,11 @@ export class FavoritosController {
     return this.favoritosService.findAll();
   }
 
+  @Get('usuario/:userId')
+  findByUser(@Param('userId') userId: string) {
+    return this.favoritosService.findByUser(userId);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.favoritosService.findOne(id);

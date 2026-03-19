@@ -173,22 +173,23 @@ También dispones de los siguientes endpoints (similares a los de partidos):
 
 # Documentación de Endpoints - API Favoritos
 
-Esta sección detalla los endpoints disponibles para guardar y obtener la selección de liga y equipo favorito del usuario.
+Esta sección detalla los endpoints disponibles para guardar y obtener la selección de liga y equipo favorito ligado al usuario.
 
 ---
 
 ## 10. Guardar la Selección de Favoritos (`POST`)
-Guarda la selección de la liga y el equipo favorito.
+Guarda la selección de la liga y el equipo favorito vinculado al ID de un usuario registrado.
 
 **URL:** `POST http://localhost:3000/favoritos`
 **Body JSON:**
 ```json
 {
   "liga": "colombiana",
-  "equipo": "Atlético Nacional"
+  "equipo": "Atlético Nacional",
+  "userId": "64bf6d0f81d89b14f8a0a8e1"
 }
 ```
-*(Nota: El campo `equipo` puede ser el nombre del equipo o su ID (`_id`), dependiendo de cómo lo estés enviando desde el frontend, ambos formatos son aceptados como texto)*.
+*(Nota: Asegúrate de enviar el `userId` que te devolvió el Login para poder consultar sus favoritos luego).*
 
 **Ejemplo en Frontend (`fetch`):**
 ```javascript
@@ -197,22 +198,119 @@ fetch("http://localhost:3000/favoritos", {
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({
     liga: "colombiana",
-    equipo: "Atlético Nacional"
+    equipo: "Atlético Nacional",
+    userId: localStorage.getItem("userId") // Tomando el ID guardado
   })
 })
 ```
 
 ---
 
-## 11. Obtener la Selección de Favoritos (`GET`)
-Devuelve todas las selecciones de favoritos de la base de datos.
-*(Dado que esto es conceptualmente para un solo usuario en este momento, típicamente llamarán a esto y tomarán el primer o último valor de la lista, o bien pueden usar su `ID` referenciándolo con `GET /favoritos/:id`).*
+## 11. Obtener Favoritos por Usuario (`GET`)
+Devuelve todas las selecciones de favoritos asociadas a un `userId` específico.
 
-**URL:** `GET http://localhost:3000/favoritos`
+**URL:** `GET http://localhost:3000/favoritos/usuario/:userId`
 
 **Ejemplo en Frontend (`fetch`):**
 ```javascript
-fetch("http://localhost:3000/favoritos")
+const userId = localStorage.getItem("userId");
+
+fetch(`http://localhost:3000/favoritos/usuario/${userId}`)
   .then(res => res.json())
-  .then(data => console.log(data)); // Contiene un arreglo con los favoritos.
+  .then(data => {
+    console.log("Favoritos de este usuario:", data); 
+  });
+```
+
+*(Nota: También sigue existiendo `GET /favoritos` para obtener todos los favoritos generales y `GET /favoritos/:id` para buscar un favorito por su propio ID).*
+```
+
+---
+
+# Documentación de Endpoints - API Autenticación (Auth)
+
+Esta sección detalla los endpoints para el registro y login de usuarios.
+
+---
+
+## 12. Registrar un Usuario (`POST`)
+Crea un nuevo usuario en la base de datos de MongoDB, encriptando su contraseña.
+
+**URL:** `POST http://localhost:3000/auth/register`
+**Body JSON:**
+```json
+{
+  "username": "usuario_ejemplo",
+  "password": "mi_password_seguro"
+}
+```
+
+**Ejemplo en Frontend (`fetch`):**
+```javascript
+fetch("http://localhost:3000/auth/register", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    username: "usuario_ejemplo",
+    password: "mi_password_seguro"
+  })
+})
+```
+
+---
+
+## 13. Iniciar Sesión / Login (`POST`)
+Inicia sesión validando el usuario y la contraseña. Si son correctos, devuelve el `id` del usuario.
+
+**URL:** `POST http://localhost:3000/auth/login`
+**Body JSON:**
+```json
+{
+  "username": "usuario_ejemplo",
+  "password": "mi_password_seguro"
+}
+```
+
+**Respuesta Exitosa (Devuelve el ID):**
+```json
+{
+  "id": "64bf6d0f81d89b14f8a0a8e1"
+}
+```
+
+**Ejemplo en Frontend (`fetch`):**
+```javascript
+fetch("http://localhost:3000/auth/login", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    username: "usuario_ejemplo",
+    password: "mi_password_seguro"
+  })
+})
+  .then(res => res.json())
+  .then(data => {
+    console.log("ID del usuario:", data.id);
+  });
+```
+
+---
+
+## 14. Cerrar Sesión / Logout (`POST`)
+Este endpoint sirve para cerrar la sesión actual en el backend. 
+**Nota importante**: En este modelo de autenticación simple, la verdadera forma de "cerrar sesión" ocurre en el **frontend**, borrando el `id` (por ejemplo usando `localStorage.removeItem('userId')`). Puedes llamar a este endpoint para tener consistencia en tu código.
+
+**URL:** `POST http://localhost:3000/auth/logout`
+
+**Ejemplo en Frontend (`fetch`):**
+```javascript
+fetch("http://localhost:3000/auth/logout", {
+  method: "POST"
+})
+  .then(res => res.json())
+  .then(data => {
+    console.log(data.message); // "Sesión cerrada correctamente"
+    // AQUÍ borras el ID de tu frontend
+    // localStorage.removeItem('userId'); 
+  });
 ```

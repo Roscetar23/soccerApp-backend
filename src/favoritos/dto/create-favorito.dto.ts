@@ -8,4 +8,8 @@ export class CreateFavoritoDto {
   @IsString()
   @IsNotEmpty()
   equipo: string;
+
+  @IsString()
+  @IsNotEmpty()
+  userId: string;
 }

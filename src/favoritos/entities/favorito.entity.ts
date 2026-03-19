@@ -10,6 +10,9 @@ export class Favorito {
 
   @Prop({ required: true })
   equipo: string;
+
+  @Prop({ required: true })
+  userId: string;
 }
 
 export const FavoritoSchema = SchemaFactory.createForClass(Favorito);

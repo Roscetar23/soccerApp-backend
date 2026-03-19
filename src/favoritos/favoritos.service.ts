@@ -20,6 +20,10 @@ export class FavoritosService {
     return this.favoritoModel.find().exec();
   }
 
+  async findByUser(userId: string): Promise<Favorito[]> {
+    return this.favoritoModel.find({ userId }).exec();
+  }
+
   async findOne(id: string): Promise<Favorito> {
     const favorito = await this.favoritoModel.findById(id).exec();
     if (!favorito) {
