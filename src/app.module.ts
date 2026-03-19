@@ -8,6 +8,7 @@ import { EquiposModule } from './equipos/equipos.module';
 import { FavoritosModule } from './favoritos/favoritos.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { TorneosModule } from './torneos/torneos.module';
 import databaseConfig from './config/database.config';
 import appConfig from './config/app.config';
 
@@ -29,6 +30,7 @@ import appConfig from './config/app.config';
     FavoritosModule,
     AuthModule,
     UsersModule,
+    TorneosModule,
   ],
   controllers: [AppController],
   providers: [AppService],

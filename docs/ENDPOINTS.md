@@ -362,3 +362,92 @@ fetch("http://localhost:3000/auth/logout", {
     // localStorage.removeItem('userId'); 
   });
 ```
+
+---
+
+# Documentación de Endpoints - API Torneos
+
+Esta sección detalla los endpoints disponibles para crear y gestionar torneos (ligas o de eliminación directa), que pueden incluir equipos personalizados con su propio escudo.
+
+---
+
+## 17. Crear un Torneo Nuevo (`POST`)
+Guarda un nuevo torneo en la base de datos, con una configuración de campeonato (`tipo`) y un arreglo de `equipos` que van a participar.
+
+**URL:** `POST http://localhost:3000/torneos`
+**Body JSON:**
+```json
+{
+  "nombre": "Copa Internacional 2026",
+  "tipo": "eliminacion_directa",
+  "equipos": [
+    {
+      "nombre": "Los Halcones",
+      "escudo": "https://url.com/halcones.png"
+    },
+    {
+      "nombre": "Estrella Roja",
+      "escudo": "https://url.com/estrella.png"
+    }
+  ]
+}
+```
+*(Tipos válidos: `"eliminacion_directa"` o `"liga"`)*
+
+**Ejemplo en Frontend (`fetch`):**
+```javascript
+fetch("http://localhost:3000/torneos", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    nombre: "Copa Internacional 2026",
+    tipo: "eliminacion_directa",
+    equipos: [
+      { nombre: "Los Halcones", escudo: "https://url.com/halcones.png" },
+      { nombre: "Estrella Roja", escudo: "https://url.com/estrella.png" }
+    ]
+  })
+})
+```
+
+---
+
+## 18. Obtener Torneos (`GET`)
+Devuelve todos los torneos que has creado. Al consultarlo, podrás ver el nombre del torneo, el `tipo` y la lista de todos sus equipos.
+
+**URL:** `GET http://localhost:3000/torneos`
+
+**Ejemplo en Frontend (`fetch`):**
+```javascript
+fetch("http://localhost:3000/torneos")
+  .then(res => res.json())
+  .then(data => console.log(data));
+```
+
+---
+
+## 19. Obtener un Torneo por ID (`GET`)
+Devuelve la información completa (incluyendo equipos participantes y el tipo) de un único torneo, ideal si entras a una pestaña de detalle.
+
+**URL:** `GET http://localhost:3000/torneos/:id`
+
+**Ejemplo en Frontend (`fetch`):**
+```javascript
+fetch("http://localhost:3000/torneos/12345qwe")
+  .then(res => res.json())
+  .then(data => console.log(data));
+```
+
+---
+
+## 20. Eliminar un Torneo (`DELETE`)
+Elimina un torneo creado de forma permanente de la base de datos usando su ID.
+
+**URL:** `DELETE http://localhost:3000/torneos/:id`
+
+**Ejemplo en Frontend (`fetch`):**
+```javascript
+fetch("http://localhost:3000/torneos/12345qwe", {
+  method: "DELETE"
+})
+```
