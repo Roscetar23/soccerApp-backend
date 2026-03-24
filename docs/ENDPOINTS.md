@@ -33,7 +33,6 @@ fetch("http://localhost:3000/partidos", {
   })
 })
 ```
-
 ---
 
 ## 2. Obtener los Próximos Partidos (`GET`) ⏳ (El principal para tu reloj contador)
@@ -75,15 +74,16 @@ Ideal para cuando el usuario presiona en ver "detalles" de un único partido. Re
 
 ---
 
-## 5. Editar / Actualizar un partido (`PATCH`)
-Sirve por si quieres cambiar un estadio, la fecha de un evento o el equipo. Solo envía el campo que quieres cambiar de ese `:id`.
+## 5. Editar / Actualizar un resultado o partido (`PATCH`)
+Sirve por si quieres actualizar el marcador final, registrar los goles, o culminar el estado del partido. Reemplaza `:id` por el ID del partido.
 
 **URL:** `PATCH http://localhost:3000/partidos/:id`
 **Body JSON:**
 ```json
 {
-  "estadio": "Nuevo Estadio Remodelado",
-  "estado": "En Juego"
+  "golesLocal": 2,
+  "golesVisitante": 1,
+  "estado": "finalizado"
 }
 ```
 
@@ -92,7 +92,11 @@ Sirve por si quieres cambiar un estadio, la fecha de un evento o el equipo. Solo
 fetch("http://localhost:3000/partidos/69b45ac0248123741db6b2ac", {
   method: "PATCH",
   headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ estado: "Finalizado" })
+  body: JSON.stringify({ 
+    golesLocal: 2, 
+    golesVisitante: 1, 
+    estado: "finalizado" 
+  })
 })
 ```
 
@@ -372,27 +376,21 @@ Esta sección detalla los endpoints disponibles para crear y gestionar torneos (
 ---
 
 ## 17. Crear un Torneo Nuevo (`POST`)
-Guarda un nuevo torneo en la base de datos, con una configuración de campeonato (`tipo`) y un arreglo de `equipos` que van a participar.
+Guarda un nuevo torneo en la base de datos, con una configuración de campeonato estricta (`tipoFormato`) y un array de los ObjectIds correspondientes a los `equipos` que van a participar.
 
 **URL:** `POST http://localhost:3000/torneos`
 **Body JSON:**
 ```json
 {
-  "nombre": "Copa Internacional 2026",
-  "tipo": "eliminacion_directa",
+  "nombre": "Copa Metropolitana 2026",
+  "tipoFormato": "eliminacion_directa",
   "equipos": [
-    {
-      "nombre": "Los Halcones",
-      "escudo": "https://url.com/halcones.png"
-    },
-    {
-      "nombre": "Estrella Roja",
-      "escudo": "https://url.com/estrella.png"
-    }
+    "64bf6d0f81d89b14f8a0a8e2",
+    "64bf6d0f81d89b14f8a0a8e3"
   ]
 }
 ```
-*(Tipos válidos: `"eliminacion_directa"` o `"liga"`)*
+*(Tipos de Formato válidos: `"eliminacion_directa"` o `"liguilla"`)*
 
 **Ejemplo en Frontend (`fetch`):**
 ```javascript
@@ -400,11 +398,11 @@ fetch("http://localhost:3000/torneos", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({
-    nombre: "Copa Internacional 2026",
-    tipo: "eliminacion_directa",
+    nombre: "Copa Metropolitana 2026",
+    tipoFormato: "liguilla",
     equipos: [
-      { nombre: "Los Halcones", escudo: "https://url.com/halcones.png" },
-      { nombre: "Estrella Roja", escudo: "https://url.com/estrella.png" }
+      "64bf6d0f81d89b14f8a0a8e2",
+      "64bf6d0f81d89b14f8a0a8e3"
     ]
   })
 })
@@ -450,4 +448,49 @@ Elimina un torneo creado de forma permanente de la base de datos usando su ID.
 fetch("http://localhost:3000/torneos/12345qwe", {
   method: "DELETE"
 })
+```
+
+---
+
+# Documentación de Endpoints - API Partidos Torneo
+
+Esta sección detalla los endpoints para manipular los partidos **que SÍ pertenecen a una liga local o eliminación** creada por el organizador. Asegúrate de enviar los *ObjectIds* al crear los versus.
+
+---
+
+## 21. Crear Partido de Torneo (`POST`)
+Guarda un nuevo partido asociándolo explícitamente a un torneo y dos equipos (Local vs Visitante).
+
+**URL:** `POST http://localhost:3000/partidos-torneo`
+**Body JSON:**
+```json
+{
+  "torneo": "64bf6d0f81d89b14f8a0a8e1",
+  "equipoLocal": "64bf6d0f81d89b14f8a0a8e2",
+  "equipoVisitante": "64bf6d0f81d89b14f8a0a8e3",
+  "fechaHora": "2026-04-15T20:00:00.000Z",
+  "estado": "programado"
+}
+```
+
+---
+
+## 22. Obtener Partidos por Torneo (`GET`)
+Extrae el historial de partidos de un torneo específico. Sirve para pintar la Liguilla o armar el Bracket de Octavos/Cuartos de final usando el `:torneoId`.
+
+**URL:** `GET http://localhost:3000/partidos-torneo/torneo/:torneoId`
+
+---
+
+## 23. Actualizar Resultado del Partido (`PATCH`)
+Útil para que el organizador establezca el marcador final de "X vs Y" y la app pueda sumar los puntos.
+
+**URL:** `PATCH http://localhost:3000/partidos-torneo/:id`
+**Body JSON:**
+```json
+{
+  "golesLocal": 2,
+  "golesVisitante": 1,
+  "estado": "finalizado"
+}
 ```

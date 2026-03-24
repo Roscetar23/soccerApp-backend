@@ -7,9 +7,7 @@ import { Torneo, TorneoDocument } from './entities/torneo.entity';
 
 @Injectable()
 export class TorneosService {
-  constructor(
-    @InjectModel(Torneo.name) private torneoModel: Model<TorneoDocument>,
-  ) {}
+  constructor(@InjectModel(Torneo.name) private torneoModel: Model<TorneoDocument>) {}
 
   async create(createTorneoDto: CreateTorneoDto): Promise<Torneo> {
     const createdTorneo = new this.torneoModel(createTorneoDto);
@@ -17,32 +15,29 @@ export class TorneosService {
   }
 
   async findAll(): Promise<Torneo[]> {
-    return this.torneoModel.find().exec();
+    return this.torneoModel.find().populate('equipos').exec();
+  }
+
+  async findByUsuario(userId: string): Promise<Torneo[]> {
+    return this.torneoModel.find({ userId }).populate('equipos').exec();
   }
 
   async findOne(id: string): Promise<Torneo> {
-    const torneo = await this.torneoModel.findById(id).exec();
-    if (!torneo) {
-      throw new NotFoundException(`Torneo con id ${id} no encontrado`);
-    }
+    const torneo = await this.torneoModel.findById(id).populate('equipos').exec();
+    if (!torneo) throw new NotFoundException('Torneo no encontrado');
     return torneo;
   }
 
   async update(id: string, updateTorneoDto: UpdateTorneoDto): Promise<Torneo> {
-    const updated = await this.torneoModel
+    const updatedTorneo = await this.torneoModel
       .findByIdAndUpdate(id, updateTorneoDto, { new: true })
       .exec();
-    if (!updated) {
-      throw new NotFoundException(`Torneo con id ${id} no encontrado`);
-    }
-    return updated;
+    if (!updatedTorneo) throw new NotFoundException('Torneo no encontrado');
+    return updatedTorneo;
   }
 
-  async remove(id: string): Promise<Torneo> {
-    const deleted = await this.torneoModel.findByIdAndDelete(id).exec();
-    if (!deleted) {
-      throw new NotFoundException(`Torneo con id ${id} no encontrado`);
-    }
-    return deleted;
+  async remove(id: string): Promise<void> {
+    const result = await this.torneoModel.findByIdAndDelete(id).exec();
+    if (!result) throw new NotFoundException('Torneo no encontrado');
   }
 }

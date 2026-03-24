@@ -1,23 +1,27 @@
-import { IsDateString, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsString, IsNotEmpty, IsDateString, IsOptional } from 'class-validator';
 
 export class CreatePartidoDto {
-  @IsString()
   @IsNotEmpty()
+  @IsString()
   equipoLocal: string;
 
-  @IsString()
   @IsNotEmpty()
+  @IsString()
   equipoVisitante: string;
 
-  @IsString()
   @IsNotEmpty()
+  @IsString()
   competicion: string;
 
-  @IsDateString()
   @IsNotEmpty()
-  fechaPartido: Date;
+  @IsDateString()
+  fechaPartido: string;
 
-  @IsString()
   @IsOptional()
+  @IsString()
   estadio?: string;
+
+  @IsOptional()
+  @IsString()
+  estado?: string;
 }

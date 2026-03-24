@@ -20,7 +20,7 @@ export class Partido {
   @Prop()
   estadio: string;
 
-  @Prop({ default: 'Programado' }) // Programado, En Juego, Finalizado
+  @Prop({ default: 'Programado' })
   estado: string;
 }
 

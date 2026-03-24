@@ -17,9 +17,23 @@ export class EquiposService {
     return createdEquipo.save();
   }
 
-  async findAll(liga?: string): Promise<Equipo[]> {
-    const query = liga ? { liga } : {};
-    return this.equipoModel.find(query).sort({ nombre: 1 }).exec();
+  async findAll(liga?: string, userId?: string): Promise<Equipo[]> {
+    let filter: any = {};
+    if (liga) {
+      filter.liga = liga;
+    } else {
+      if (userId) {
+        filter = {
+          $or: [
+            { liga: { $ne: 'barrio' } },
+            { userId: userId, liga: 'barrio' }
+          ]
+        };
+      } else {
+        filter = { liga: { $ne: 'barrio' } };
+      }
+    }
+    return this.equipoModel.find(filter).sort({ nombre: 1 }).exec();
   }
 
   async findOne(id: string): Promise<Equipo> {

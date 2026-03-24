@@ -9,6 +9,7 @@ import { FavoritosModule } from './favoritos/favoritos.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { TorneosModule } from './torneos/torneos.module';
+import { PartidosTorneoModule } from './partidos-torneo/partidos-torneo.module';
 import databaseConfig from './config/database.config';
 import appConfig from './config/app.config';
 
@@ -31,6 +32,7 @@ import appConfig from './config/app.config';
     AuthModule,
     UsersModule,
     TorneosModule,
+    PartidosTorneoModule,
   ],
   controllers: [AppController],
   providers: [AppService],

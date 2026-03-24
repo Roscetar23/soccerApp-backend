@@ -7,9 +7,7 @@ import { Partido, PartidoDocument } from './entities/partido.entity';
 
 @Injectable()
 export class PartidosService {
-  constructor(
-    @InjectModel(Partido.name) private partidoModel: Model<PartidoDocument>,
-  ) {}
+  constructor(@InjectModel(Partido.name) private partidoModel: Model<PartidoDocument>) {}
 
   async create(createPartidoDto: CreatePartidoDto): Promise<Partido> {
     const createdPartido = new this.partidoModel(createPartidoDto);
@@ -17,23 +15,17 @@ export class PartidosService {
   }
 
   async findAll(): Promise<Partido[]> {
-    // Return all sorted by upcoming dates
-    return this.partidoModel.find().sort({ fechaPartido: 1 }).exec();
+    return this.partidoModel.find().exec();
   }
 
-  async findUpcoming(): Promise<Partido[]> {
-    const now = new Date();
-    return this.partidoModel
-      .find({ fechaPartido: { $gte: now } })
-      .sort({ fechaPartido: 1 })
-      .exec();
+  async findProximos(): Promise<Partido[]> {
+    const hoy = new Date();
+    return this.partidoModel.find({ fechaPartido: { $gte: hoy } }).sort({ fechaPartido: 1 }).exec();
   }
 
   async findOne(id: string): Promise<Partido> {
     const partido = await this.partidoModel.findById(id).exec();
-    if (!partido) {
-      throw new NotFoundException(`Partido con id ${id} no encontrado`);
-    }
+    if (!partido) throw new NotFoundException('Partido no encontrado');
     return partido;
   }
 
@@ -41,17 +33,12 @@ export class PartidosService {
     const updatedPartido = await this.partidoModel
       .findByIdAndUpdate(id, updatePartidoDto, { new: true })
       .exec();
-    if (!updatedPartido) {
-      throw new NotFoundException(`Partido con id ${id} no encontrado`);
-    }
+    if (!updatedPartido) throw new NotFoundException('Partido no encontrado');
     return updatedPartido;
   }
 
-  async remove(id: string): Promise<Partido> {
-    const deletedPartido = await this.partidoModel.findByIdAndDelete(id).exec();
-    if (!deletedPartido) {
-      throw new NotFoundException(`Partido con id ${id} no encontrado`);
-    }
-    return deletedPartido;
+  async remove(id: string): Promise<void> {
+    const result = await this.partidoModel.findByIdAndDelete(id).exec();
+    if (!result) throw new NotFoundException('Partido no encontrado');
   }
 }

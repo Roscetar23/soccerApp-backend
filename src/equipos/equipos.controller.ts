@@ -14,8 +14,8 @@ export class EquiposController {
   }
 
   @Get()
-  findAll(@Query('liga') liga?: string) {
-    return this.equiposService.findAll(liga);
+  findAll(@Query('liga') liga?: string, @Query('userId') userId?: string) {
+    return this.equiposService.findAll(liga, userId);
   }
 
   @Get(':id')

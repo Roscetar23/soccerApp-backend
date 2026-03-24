@@ -12,14 +12,14 @@ export class PartidosController {
     return this.partidosService.create(createPartidoDto);
   }
 
+  @Get('proximos')
+  findProximos() {
+    return this.partidosService.findProximos();
+  }
+
   @Get()
   findAll() {
     return this.partidosService.findAll();
-  }
-
-  @Get('proximos')
-  findUpcoming() {
-    return this.partidosService.findUpcoming();
   }
 
   @Get(':id')

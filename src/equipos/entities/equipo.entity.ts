@@ -35,6 +35,9 @@ export class Equipo {
   @Prop({ required: true })
   liga: string;
 
+  @Prop({ required: false })
+  userId?: string;
+
   @Prop({ type: EstadisticasEquipo, default: () => ({}) })
   estadisticas: EstadisticasEquipo;
 }

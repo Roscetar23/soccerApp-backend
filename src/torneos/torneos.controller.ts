@@ -17,6 +17,11 @@ export class TorneosController {
     return this.torneosService.findAll();
   }
 
+  @Get('usuario/:userId')
+  findByUsuario(@Param('userId') userId: string) {
+    return this.torneosService.findByUsuario(userId);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.torneosService.findOne(id);
