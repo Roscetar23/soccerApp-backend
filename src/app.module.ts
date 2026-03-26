@@ -10,6 +10,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { TorneosModule } from './torneos/torneos.module';
 import { PartidosTorneoModule } from './partidos-torneo/partidos-torneo.module';
+import { MundialModule } from './mundial/mundial.module';
 import databaseConfig from './config/database.config';
 import appConfig from './config/app.config';
 
@@ -33,6 +34,7 @@ import appConfig from './config/app.config';
     UsersModule,
     TorneosModule,
     PartidosTorneoModule,
+    MundialModule,
   ],
   controllers: [AppController],
   providers: [AppService],

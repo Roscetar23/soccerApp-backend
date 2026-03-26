@@ -17,6 +17,27 @@ export class EstadisticasEquipo {
 
   @Prop({ default: 0 })
   promedioFaltas: number;
+
+  @Prop({ default: 0 })
+  puntos: number;
+
+  @Prop({ default: 0 })
+  partidosJugados: number;
+
+  @Prop({ default: 0 })
+  victorias: number;
+
+  @Prop({ default: 0 })
+  empates: number;
+
+  @Prop({ default: 0 })
+  derrotas: number;
+
+  @Prop({ default: 0 })
+  golesFavor: number;
+
+  @Prop({ default: 0 })
+  golesContra: number;
 }
 
 export type EquipoDocument = Equipo & Document;
@@ -34,6 +55,9 @@ export class Equipo {
 
   @Prop({ required: true })
   liga: string;
+
+  @Prop()
+  estadio: string;
 
   @Prop({ required: false })
   userId?: string;
